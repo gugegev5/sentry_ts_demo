@@ -24,9 +24,9 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 
 const postcssNormalize = require('postcss-normalize');
-
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -508,6 +508,15 @@ module.exports = function(webpackEnv) {
       ],
     },
     plugins: [
+      new SentryWebpackPlugin({
+        // sentry-cli configuration
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: "gugu",
+        project: "sentry_ts_demo",
+        urlPrefix: '~/',
+        include: "./build",
+        ignore: ["node_modules", "webpack.config.js"],
+      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
